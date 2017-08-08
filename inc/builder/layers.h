@@ -1,54 +1,47 @@
 #pragma once
 
-#include <vector>
 #include <cstdint>
-using std::vector;
 
-namespace cbuild {
-	// Layer structures
-	struct square {
-		union
-		{
-			struct
-			{
-				bool exists: 1;
-				bool con_right: 1;
-				bool con_down: 1;
-				bool color: 1;
-				bool transistor: 1;
-			} silicon;
-
-			struct
-			{
-				char: 5;
-				bool exists: 1;
-				bool con_right: 1;
-				bool con_down: 1;
-			} metal;
-
-			uint8_t byte;
+struct square {
+	union {
+		struct {
+			bool exists: 1;
+			bool con_right: 1;
+			bool con_down: 1;
+			int8_t: 4;
+			bool active: 1;
 		};
 
-		square(): byte(0)
-		{}
+		uint8_t raw;
 	};
 
-	// Grid
-	struct area
-	{
-		const uint32_t width;
-		const uint32_t height;
+	square(): raw(0)
+	{}
+};
 
-		vector<vector<square> > grid;
+struct layer {
+	const uint16_t width;
+	const uint16_t height;
 
-		area(uint32_t w, uint32_t h) :
-			width(w),
-			height(h),
-			grid(h, vector<square>(w, square()))
-		{}
+	layer(uint16_t w, uint16_t h);
 
-		area() :
-			area(36, 27)
-		{}
-	};
-}
+	~layer();
+
+	// Get a constant referance to a specific square on the grid
+	const square& operator()(uint16_t x, uint16_t) const;
+
+	// Get a reference to a specific square on the grid
+	square& operator()(uint16_t x, uint16_t y);
+
+	// Add a square to the grid
+	void add_square(uint16_t x, uint16_t y, const square& s);
+
+	// Make a square on the grid empty
+	void del_square(uint16_t x, uint16_t y);
+
+	// Make a square on the grid empty
+	//void del_squares(uint16_t x, uint16_t y, uint16_t w, uint16_t h);
+
+protected:
+	square* grid;
+};
