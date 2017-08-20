@@ -36,11 +36,14 @@ struct layer {
 	// Add a square to the grid
 	void add_square(uint16_t x, uint16_t y, const square& s);
 
+	// Connect two contiguous squares; 'direction' follows CSS rules
+	void connect(uint16_t x, uint16_t y, uint8_t direction);
+
 	// Make a square on the grid empty
 	void del_square(uint16_t x, uint16_t y);
 
-	// Make a square on the grid empty
-	//void del_squares(uint16_t x, uint16_t y, uint16_t w, uint16_t h);
+	// Make a block of squares on the grid empty
+	void del_squares(uint16_t x, uint16_t y, uint16_t w, uint16_t h);
 
 protected:
 	square* grid;

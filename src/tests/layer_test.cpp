@@ -5,6 +5,7 @@ using std::cout;
 const uint8_t COLOR = 0b00001000;
 const uint8_t TRANSISTOR = 0b00010000;
 
+void print_layer(const layer& silicon_layer);
 void print_square(const square& s);
 
 int main()
@@ -37,14 +38,26 @@ int main()
 	silicon_layer.add_square(1, 1, transistor);
 	silicon_layer.add_square(1, 2, bottom);
 
-	for (int i = 0; i < height; ++i) {
-		for (int j = 0; j < width; ++j) {
+	print_layer(silicon_layer);
+
+	silicon_layer.del_squares(0, 0, width, 1);
+
+	print_layer(silicon_layer);
+
+	return 0;
+}
+
+
+void print_layer(const layer& silicon_layer)
+{
+	for (int i = 0; i < silicon_layer.height; ++i) {
+		for (int j = 0; j < silicon_layer.width; ++j) {
 			print_square(silicon_layer(j, i));
 		}
 
 		cout << "\n";
 
-		for (int j = 0; j < width; ++j) {
+		for (int j = 0; j < silicon_layer.width; ++j) {
 			if (silicon_layer(j, i).exists && silicon_layer(j, i).con_down) {
 				cout << " | ";
 			} else {
@@ -54,8 +67,6 @@ int main()
 
 		cout << "\n";
 	}
-
-	return 0;
 }
 
 void print_square(const square& s)
